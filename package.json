@@ -1,0 +1,31 @@
+{
+  "name": "starchain",
+  "version": "1.0.0",
+  "description": "Blockchain for enlisting the star information",
+  "main": "index.js",
+  "scripts": {
+    "test": "start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dobuzi/starChain.git"
+  },
+  "keywords": [
+    "blockchain"
+  ],
+  "author": "Dobuzi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dobuzi/starChain/issues"
+  },
+  "homepage": "https://github.com/Dobuzi/starChain#readme",
+  "dependencies": {
+    "bitcoinjs-lib": "^5.2.0",
+    "bitcoinjs-message": "^2.2.0",
+    "body-parser": "^1.19.0",
+    "crypto-js": "^4.0.0",
+    "express": "^4.17.1",
+    "hex2ascii": "^0.0.3",
+    "morgan": "^1.10.0"
+  }
+}
