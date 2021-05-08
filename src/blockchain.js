@@ -123,7 +123,7 @@ class Blockchain {
             } else if (!bitcoinMessage.verify(message, address, signature)) {
                 reject(Error("This message is not verified."))
             } else {
-                self._addBlock(new Block({
+                self._addBlock(new BlockClass.Block({
                     owner: address,
                     ...star
                 }))
