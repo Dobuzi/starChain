@@ -39,13 +39,19 @@ class Block {
         let self = this;
         return new Promise((resolve, reject) => {
             // Save in auxiliary variable the current block hash
-            const originHash = self.hash;
+            // const originHash = self.hash;
+            // const newHash = SHA256(JSON.stringify({ ...self, hash: null })).toString()
 
             // Recalculate the hash of the Block
             // Comparing if the hashes changed
             // Returning the Block is not valid
             // Returning the Block is valid
-            resolve(SHA256(JSON.stringify(self)).toString() === originHash)
+
+            if (SHA256(JSON.stringify({ ...self, hash: null })).toString() === self.hash) {
+                resolve(true)
+            } else {
+                resolve(false)
+            }
         });
     }
 
@@ -62,15 +68,13 @@ class Block {
         // Getting the encoded data saved in the Block
         // Decoding the data to retrieve the JSON representation of the object
         // Parse the data to an object to be retrieve.
-        return new Promise((res, rej) => {
-            const decodedData = JSON.parse(hex2ascii(this.body))
-            // Resolve with the data if the object isn't the Genesis block
-            if (this.previousBlockHash !== null) {
-                resolve(decodedData)
-            } else {
-                reject(Error("This is a genesis block!"))
-            }
-        })
+        // Resolve with the data if the object isn't the Genesis block
+        const decodedData = JSON.parse(hex2ascii(this.body))
+        if (this.previousBlockHash !== null) {
+            return decodedData
+        } else {
+            return { owner: "TheStarChainGod:0000000000:starRegistry", ...decodedData }
+        }
     }
 }
 

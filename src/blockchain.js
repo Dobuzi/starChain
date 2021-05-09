@@ -122,8 +122,8 @@ class Blockchain {
             const messageTime = parseInt(message.split(':')[1])
             let currentTime = parseInt(new Date().getTime().toString().slice(0, -3))
             const timeElapsed = currentTime - messageTime;
-            if (timeElapsed < 5 * 60) {
-                reject(Error("At least 5 minutes after adding block on the chain."))
+            if (timeElapsed > 5 * 60) {
+                reject(Error("You cannot add block on the chain after 5 minutes."))
             } else if (!bitcoinMessage.verify(message, address, signature)) {
                 reject(Error("This message is not verified."))
             } else {
@@ -145,7 +145,7 @@ class Blockchain {
     getBlockByHash(hash) {
         let self = this;
         return new Promise((resolve, reject) => {
-            const block = self.chain.filter(block => block.hash === hash)[0]
+            const block = self.chain.find(block => block.hash === hash)
             if (block) {
                 resolve(block)
             } else {
@@ -182,7 +182,7 @@ class Blockchain {
         let stars = [];
         return new Promise((resolve, reject) => {
             stars = self.chain.filter(block => block.getBData().owner.split(':')[0] === address)
-            if (stars) {
+            if (stars.length) {
                 resolve(stars)
             } else {
                 reject(Error('No matched address in the blockchain'))
@@ -201,7 +201,8 @@ class Blockchain {
         let errorLog = [];
         return new Promise(async (resolve, reject) => {
             for (const [index, block] of self.chain.entries()) {
-                if (!block.validate()) {
+                const isValidate = await block.validate()
+                if (!isValidate) {
                     errorLog.push({ index, error: 'Invalid block.' })
                 } else if (index > 0 && block.previousBlockHash !== self.chain[index - 1].hash) {
                     errorLog.push({ index, error: 'The Blockchain is broken here.' })
