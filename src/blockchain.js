@@ -71,8 +71,12 @@ class Blockchain {
                     block.previousBlockHash = self.chain[self.chain.length - 1].hash;
                 }
                 block.hash = SHA256(JSON.stringify(block)).toString();
-                this.chain.push(block);
-                this.height += 1
+                self.chain.push(block);
+                self.height += 1
+                if (self.validateChain().length > 0) {
+                    self.chain.pop();
+                    self.height -= 1
+                }
                 resolve(block)
             } catch (e) {
                 reject(e)
@@ -199,17 +203,16 @@ class Blockchain {
             for (const [index, block] of self.chain.entries()) {
                 if (!block.validate()) {
                     errorLog.push({ index, error: 'Invalid block.' })
-                } else if (index && block.previousBlockHash !== self.chain[index - 1].hash) {
+                } else if (index > 0 && block.previousBlockHash !== self.chain[index - 1].hash) {
                     errorLog.push({ index, error: 'The Blockchain is broken here.' })
                 }
             }
-
-            if (errorLog) {
+            if (errorLog.length) {
                 console.log('These are invalid blocks list.')
-                resolve(errorLog)
             } else {
-                reject(Error('The block chain is valid!'))
+                console.log('The blockchain is valid')
             }
+            resolve(errorLog)
         });
     }
 

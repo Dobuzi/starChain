@@ -42,12 +42,10 @@ class Block {
             const originHash = self.hash;
 
             // Recalculate the hash of the Block
-            self.hash = SHA256(JSON.stringify(self)).toString();
-
             // Comparing if the hashes changed
             // Returning the Block is not valid
             // Returning the Block is valid
-            resolve(self.hash === originHash)
+            resolve(SHA256(JSON.stringify(self)).toString() === originHash)
         });
     }
 
